@@ -1,6 +1,10 @@
 package strava
 
-import "time"
+import (
+	"strconv"
+	"strings"
+	"time"
+)
 
 /*
    "id": 8529483,
@@ -56,16 +60,17 @@ import "time"
     "max_heartrate": 179.0
 */
 type Activity struct {
-	Id             int64     `json:"id"`
-	ResourceState  int64     `json:"resource_state"`
-	UploadId       int64     `json:"upload_id"`
-	Name           string    `json:"name"`
-	Distance       float64   `json:"distance"`
-	MovingTime     float64   `json:"moving_time"`
-	ElapsedTime    float64   `json:"elapsed_time"`
-	Type           string    `json:"type"` // "Ride"
-	StartDate      time.Time `json:"start_date"`
-	StartDateLocal time.Time `json:"start_date_local"`
+	Id             int64   `json:"id"`
+	ResourceState  int64   `json:"resource_state"`
+	UploadId       int64   `json:"upload_id"`
+	Name           string  `json:"name"`
+	Distance       float64 `json:"distance"`
+	MovingTime     float64 `json:"moving_time"`
+	ElapsedTime    float64 `json:"elapsed_time"`
+	Type           string  `json:"type"` // "Ride"
+	TimeZone       string  `json:"timezone"`
+	StartDate      string  `json:"start_date"`
+	StartDateLocal string  `json:"start_date_local"`
 
 	LocationCity    string `json:"location_city"`
 	LocationState   string `json:"location_state"`
@@ -77,6 +82,30 @@ type Activity struct {
 	MaxSpeed       float64 `json:"max_speed"`       // : 4.514,
 	AverageWatts   float64 `json:"average_watts"`   // : 163.6,
 	MaxHeartRate   float64 `json:"max_heartrate"`   // 179.0
+}
+
+func (a *Activity) GetTimeZone() *time.Location {
+	args := strings.SplitN(a.TimeZone, " ", 2)
+	tz, _ := time.LoadLocation(args[1])
+	return tz
+}
+
+func (a *Activity) GetStartDate() time.Time {
+	t, _ := time.Parse("2006-01-02T15:04:05Z", a.StartDateLocal)
+	return t
+	// a.GetTimeZone()
+}
+
+/*
+type Time time.Time
+func (s *Time) UnmarshalJSON(data []byte) {
+
+}
+*/
+
+func (a *Activity) UUID() string {
+	str := strconv.Itoa(int(a.Id))
+	return str
 }
 
 type Activities []Activity
