@@ -61,8 +61,8 @@ type Activity struct {
 	UploadId       int64     `json:"upload_id"`
 	Name           string    `json:"name"`
 	Distance       float64   `json:"distance"`
-	MovingTime     int64     `json:"moving_time"`
-	ElapsedTime    int64     `json:"elapsed_time"`
+	MovingTime     float64   `json:"moving_time"`
+	ElapsedTime    float64   `json:"elapsed_time"`
 	Type           string    `json:"type"` // "Ride"
 	StartDate      time.Time `json:"start_date"`
 	StartDateLocal time.Time `json:"start_date_local"`
